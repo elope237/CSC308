@@ -7,6 +7,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "dev": "npm --prefix packages/react-frontend run dev",
+    "install:all": "npm --prefix packages/react-frontend install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [
