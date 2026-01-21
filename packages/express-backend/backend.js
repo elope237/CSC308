@@ -37,7 +37,10 @@ const users = {
 
 // Health check
 app.get("/", (req, res) => {
-  res.json({ message: "Hello from Backend. The Backend is running correctly" });
+  res.json({
+    message:
+      "Hello from Backend. The Backend is running correctly with nodemon",
+  });
 });
 
 app.get("/users", (req, res) => {
