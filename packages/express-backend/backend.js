@@ -1,10 +1,12 @@
 // backend.js
 
 import express from "express";
+import cors from "cors";
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001; //3001
 
+app.use(cors());
 app.use(express.json());
 
 const users = {
@@ -36,6 +38,8 @@ const users = {
     },
   ],
 };
+
+const generateId = () => Math.random().toString(36).substring(2, 9);
 
 // Check if the server is running with message
 app.get("/", (req, res) => {
@@ -74,7 +78,7 @@ const deleteUserById = (id) => {
 app.get("/users", (req, res) => {
   const { name, job } = req.query;
 
-  // No filters -> return all users
+  // No filters: return all users
   if (name === undefined && job === undefined) {
     return res.json(users);
   }
@@ -115,25 +119,15 @@ app.delete("/users/:id", (req, res) => {
 
 // Add a new user
 app.post("/users", (req, res) => {
-  const userToAdd = req.body;
-  addUser(userToAdd);
-  res.sendStatus(200);
-});
+  const userToAdd = {
+    id: generateId(),
+    name: req.body.name,
+    job: req.body.job,
+  };
 
-/*
-1)run npm dev: to start the server in express-backend
-2)Add CINDY as a new user in terminal 
-curl -X POST http://localhost:3001/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "id": "qwe123",
-    "name": "Cindy",
-    "job": "Zookeeper"
-  }'
-3)Check if CINDY is added
-http://localhost:3001/users
-4)Restart the server to remove CINDY
-*/
+  addUser(userToAdd);
+  res.status(201).json(userToAdd);
+});
 
 // Example REST endpoints
 let items = [
