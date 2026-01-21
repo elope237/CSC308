@@ -37,8 +37,6 @@ const users = {
   ],
 };
 
-
-
 // Check if the server is running with message
 app.get("/", (req, res) => {
   res.json({
@@ -63,16 +61,32 @@ const addUser = (user) => {
   return user;
 };
 
+// Delete a user by ID (hard delete)
+const deleteUserById = (id) => {
+  const index = users.users_list.findIndex((user) => user.id === id);
+  if (index === -1) return false;
+
+  users.users_list.splice(index, 1);
+  return true;
+};
+
 // Get all users or filter by name
 app.get("/users", (req, res) => {
-  const name = req.query.name;
+  const { name, job } = req.query;
 
-  if (name !== undefined) {
-    const result = findUserByName(name);
-    return res.json({ users_list: result });
+  // No filters -> return all users
+  if (name === undefined && job === undefined) {
+    return res.json(users);
   }
 
-  return res.json(users);
+  // Apply whichever filters were provided
+  const result = users.users_list.filter((user) => {
+    const matchName = name === undefined || user.name === name;
+    const matchJob = job === undefined || user.job === job;
+    return matchName && matchJob;
+  });
+
+  return res.json({ users_list: result });
 });
 
 // Get user by ID
@@ -85,6 +99,18 @@ app.get("/users/:id", (req, res) => {
   }
 
   return res.json(result);
+});
+
+// DELETE user by ID
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const deleted = deleteUserById(id);
+
+  if (!deleted) {
+    return res.status(404).send("Resource not found.");
+  }
+
+  return res.sendStatus(200);
 });
 
 // Add a new user
