@@ -1,3 +1,5 @@
+// backend.js
+
 import express from "express";
 
 const app = express();
@@ -35,7 +37,7 @@ const users = {
   ],
 };
 
-// Health check
+// Check if the server is running with message
 app.get("/", (req, res) => {
   res.json({
     message:
@@ -43,8 +45,19 @@ app.get("/", (req, res) => {
   });
 });
 
+const findUserByName = (name) => {
+  return users.users_list.filter((user) => user.name === name);
+};
+
 app.get("/users", (req, res) => {
-  res.json(users);
+  const name = req.query.name;
+
+  if (name !== undefined) {
+    const result = findUserByName(name);
+    return res.json({ users_list: result });
+  }
+
+  return res.json(users);
 });
 
 // Example REST endpoints
