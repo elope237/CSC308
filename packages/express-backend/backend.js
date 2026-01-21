@@ -37,6 +37,8 @@ const users = {
   ],
 };
 
+
+
 // Check if the server is running with message
 app.get("/", (req, res) => {
   res.json({
@@ -53,6 +55,12 @@ const findUserByName = (name) => {
 // Find user by ID
 const findUserById = (id) => {
   return users.users_list.find((user) => user.id === id);
+};
+
+// Add a new user
+const addUser = (user) => {
+  users.users_list.push(user);
+  return user;
 };
 
 // Get all users or filter by name
@@ -78,6 +86,28 @@ app.get("/users/:id", (req, res) => {
 
   return res.json(result);
 });
+
+// Add a new user
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.sendStatus(200);
+});
+
+/*
+1)run npm dev: to start the server in express-backend
+2)Add CINDY as a new user in terminal 
+curl -X POST http://localhost:3001/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "qwe123",
+    "name": "Cindy",
+    "job": "Zookeeper"
+  }'
+3)Check if CINDY is added
+http://localhost:3001/users
+4)Restart the server to remove CINDY
+*/
 
 // Example REST endpoints
 let items = [
