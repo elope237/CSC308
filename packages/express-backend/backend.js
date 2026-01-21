@@ -45,10 +45,17 @@ app.get("/", (req, res) => {
   });
 });
 
+// Find users by name
 const findUserByName = (name) => {
   return users.users_list.filter((user) => user.name === name);
 };
 
+// Find user by ID
+const findUserById = (id) => {
+  return users.users_list.find((user) => user.id === id);
+};
+
+// Get all users or filter by name
 app.get("/users", (req, res) => {
   const name = req.query.name;
 
@@ -58,6 +65,18 @@ app.get("/users", (req, res) => {
   }
 
   return res.json(users);
+});
+
+// Get user by ID
+app.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const result = findUserById(id);
+
+  if (result === undefined) {
+    return res.status(404).send("Resource not found.");
+  }
+
+  return res.json(result);
 });
 
 // Example REST endpoints
