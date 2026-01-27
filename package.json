@@ -1,5 +1,6 @@
 {
   "name": "csc-308-app",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -13,5 +14,11 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
 }
